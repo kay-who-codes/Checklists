@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist App</title>
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --background: #121212;
+            --surface: #1e1e1e;
+            --surface-hover: #2c2c2c;
+            --text-primary: rgba(255, 255, 255, 0.87);
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --border: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 1.5rem;
+            background-color: var(--surface);
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem 1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        select {
+            background-color: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            width: 180px;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.25);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.15s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .checklist-item {
+            background-color: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            border-left: 4px solid var(--primary);
+            transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+
+        .checklist-item:hover {
+            background-color: var(--surface-hover);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .checklist-item.checked {
+            opacity: 0.2;
+            text-decoration: line-through;
+        }
+
+        .checklist-item-text {
+            margin-left: 0.75rem;
+            transition: text-decoration 0.3s;
+        }
+
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .checkbox.checked::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 7px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            background-color: transparent;
+            transform: rotate(45deg);
+        }
+
+        .checkbox.checked {
+            background-color: var(--primary);
+        }
+
+        /* Animation for ordered items */
+        .checklist-item {
+            transition: transform 0.5s ease-out, opacity 0.5s, background-color 0.3s;
+        }
+        
+        /* Flash animation */
+        @keyframes flash {
+            0% { background-color: var(--surface); }
+            30% { background-color: rgba(58, 134, 255, 0.3); }
+            100% { background-color: var(--surface); }
+        }
+        
+        .checklist-item.flash {
+            animation: flash 0.6s ease-out;
+        }
+
+        .no-items {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Category indicator */
+        .category-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Dark mode toggle */
+        .theme-label {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .clear-completed-button {
+            margin-left: auto;
+            background-color: transparent;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .clear-completed-button:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* For smaller screens */
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Checklist App</h1>
+        <div class="controls">
+            <select id="category-filter">
+                <option value="all">All Checklists</option>
+                <!-- Categories will be populated from JSON -->
+            </select>
+            <button id="toggle-all">Check All</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div id="checklist-container" class="checklist">
+            <!-- Checklist items will be populated here -->
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Main data structure to hold our checklists
+            let allChecklists = [];
+            let currentFilter = 'all';
+            let allChecked = false;
+            
+            // Fetch checklists from JSON file
+            fetch('checklists.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load checklists');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    allChecklists = data;
+                    populateCategoryFilter();
+                    renderChecklists();
+                })
+                .catch(error => {
+                    console.error('Error loading checklists:', error);
+                    document.getElementById('checklist-container').innerHTML = `
+                        <div class="no-items">
+                            <p>Unable to load checklists. Please check if checklists.json exists.</p>
+                            <p><small>${error.message}</small></p>
+                        </div>
+                    `;
+                });
+            
+            // Populate the category filter dropdown
+            function populateCategoryFilter() {
+                const categoryFilter = document.getElementById('category-filter');
+                const categories = new Set();
+                
+                // Add all categories from checklists
+                allChecklists.forEach(checklist => {
+                    categories.add(checklist.category);
+                });
+                
+                // Sort categories alphabetically
+                const sortedCategories = Array.from(categories).sort();
+                
+                // Add categories to the dropdown
+                sortedCategories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilter.appendChild(option);
+                });
+            }
+            
+            // Render checklists based on current filter
+            function renderChecklists(animateReordering = false) {
+                const container = document.getElementById('checklist-container');
+                
+                // Store current positions for animation before any DOM changes
+                const oldItemsInfo = {};
+                if (animateReordering) {
+                    const currentItems = document.querySelectorAll('.checklist-item');
+                    currentItems.forEach(item => {
+                        const rect = item.getBoundingClientRect();
+                        oldItemsInfo[item.getAttribute('data-id')] = {
+                            element: item.cloneNode(true),
+                            rect: rect
+                        };
+                    });
+                }
+                
+                // Clear container but save its scroll position
+                const scrollTop = container.scrollTop;
+                container.innerHTML = '';
+                
+                // Filter checklists based on selected category
+                const filteredChecklists = currentFilter === 'all' 
+                    ? allChecklists 
+                    : allChecklists.filter(checklist => checklist.category === currentFilter);
+                
+                if (filteredChecklists.length === 0) {
+                    container.innerHTML = '<div class="no-items">No items found</div>';
+                    return;
+                }
+                
+                // Group items by category for better organization
+                const categorizedItems = {};
+                
+                filteredChecklists.forEach(checklist => {
+                    if (!categorizedItems[checklist.category]) {
+                        categorizedItems[checklist.category] = {
+                            color: checklist.color || '#3a86ff', // Default to blue if no color provided
+                            items: []
+                        };
+                    }
+                    
+                    checklist.items.forEach(item => {
+                        categorizedItems[checklist.category].items.push({
+                            id: `${checklist.id}-${item.id}`,
+                            text: item.text,
+                            checked: item.checked || false,
+                            position: item.position || 0
+                        });
+                    });
+                });
+                
+                // Sort and render each category
+                Object.keys(categorizedItems).sort().forEach(category => {
+                    // Create category header if showing all categories
+                    if (currentFilter === 'all') {
+                        const categoryHeader = document.createElement('div');
+                        categoryHeader.className = 'category-name';
+                        categoryHeader.innerHTML = `
+                            <span class="category-indicator" style="background-color: ${categorizedItems[category].color}"></span>
+                            ${category}
+                            <button class="clear-completed-button" data-category="${category}">Clear completed</button>
+                        `;
+                        container.appendChild(categoryHeader);
+                    }
+                    
+                    // Sort items by checked status and original position
+                    const items = categorizedItems[category].items.sort((a, b) => {
+                        if (a.checked !== b.checked) {
+                            return a.checked ? 1 : -1;
+                        }
+                        return a.position - b.position;
+                    });
+                    
+                    // Create and append items
+                    items.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = `checklist-item ${item.checked ? 'checked' : ''}`;
+                        itemElement.setAttribute('data-id', item.id);
+                        itemElement.style.borderLeftColor = categorizedItems[category].color;
+                        
+                        itemElement.innerHTML = `
+                            <div class="checkbox ${item.checked ? 'checked' : ''}"></div>
+                            <div class="checklist-item-text">${item.text}</div>
+                        `;
+                        
+                        container.appendChild(itemElement);
+                    });
+                });
+                
+                // Restore scroll position
+                container.scrollTop = scrollTop;
+                
+                // Add click handlers after rendering
+                addItemClickHandlers();
+                addClearCompletedHandlers();
+                
+                // Apply FLIP animation for smooth reordering after all DOM changes
+                if (animateReordering && Object.keys(oldItemsInfo).length > 0) {
+                    // Get new positions
+                    const newItems = container.querySelectorAll('.checklist-item');
+                    
+                    // Apply FLIP animation
+                    newItems.forEach(item => {
+                        const id = item.getAttribute('data-id');
+                        const oldInfo = oldItemsInfo[id];
+                        
+                        if (oldInfo) {
+                            const newRect = item.getBoundingClientRect();
+                            const deltaY = oldInfo.rect.top - newRect.top;
+                            const deltaX = oldInfo.rect.left - newRect.left;
+                            
+                            // Only animate if there's actual movement
+                            if (Math.abs(deltaY) > 1 || Math.abs(deltaX) > 1) {
+                                // Initial position
+                                item.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                                item.style.transition = 'none';
+                                
+                                // Force reflow
+                                void item.offsetWidth;
+                                
+                                // Animate to final position
+                                item.style.transform = '';
+                                item.style.transition = 'transform 0.8s ease';
+                            }
+                        }
+                    });
+                }
+            }
+            
+            // Toggle item checked state
+            function toggleItemChecked(itemId) {
+                // Find the item in allChecklists
+                let found = false;
+                
+                for (const checklist of allChecklists) {
+                    for (const item of checklist.items) {
+                        const currentId = `${checklist.id}-${item.id}`;
+                        if (currentId === itemId) {
+                            item.checked = !item.checked;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+                
+                // Re-render checklists with animation
+                renderChecklists(true);
+            }
+            
+            // Add click handlers to checklist items
+            function addItemClickHandlers() {
+                const items = document.querySelectorAll('.checklist-item');
+                items.forEach(item => {
+                    item.addEventListener('click', function() {
+                        const itemId = this.getAttribute('data-id');
+                        
+                        // Add flash animation class
+                        this.classList.add('flash');
+                        
+                        // Toggle checked state with slight delay for animation
+                        setTimeout(() => {
+                            toggleItemChecked(itemId);
+                        }, 150);
+                        
+                        // Remove flash class after animation completes
+                        setTimeout(() => {
+                            this.classList.remove('flash');
+                        }, 600);
+                    });
+                });
+            }
+            
+            // Add clear completed handlers
+            function addClearCompletedHandlers() {
+                const clearButtons = document.querySelectorAll('.clear-completed-button');
+                clearButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Prevent triggering parent clicks
+                        const category = this.getAttribute('data-category');
+                        
+                        // Remove checked items from the category
+                        allChecklists.forEach(checklist => {
+                            if (checklist.category === category) {
+                                checklist.items = checklist.items.filter(item => !item.checked);
+                            }
+                        });
+                        
+                        renderChecklists(true);
+                    });
+                });
+            }
+            
+            // Handle category filter change
+            document.getElementById('category-filter').addEventListener('change', function() {
+                currentFilter = this.value;
+                renderChecklists();
+                
+                // Update toggle-all button text based on new filtered items
+                updateToggleAllButtonText();
+            });
+            
+            // Toggle all items
+            document.getElementById('toggle-all').addEventListener('click', function() {
+                toggleAllItems();
+            });
+            
+            // Toggle all items based on current filter
+            function toggleAllItems() {
+                allChecked = !allChecked;
+                
+                // Update all items based on filter
+                allChecklists.forEach(checklist => {
+                    // Skip if not matching current filter
+                    if (currentFilter !== 'all' && checklist.category !== currentFilter) {
+                        return;
+                    }
+                    
+                    // Toggle all items in this checklist
+                    checklist.items.forEach(item => {
+                        item.checked = allChecked;
+                    });
+                });
+                
+                // Update button text
+                updateToggleAllButtonText();
+                
+                // Re-render checklists with animation
+                renderChecklists(true);
+            }
+            
+            // Update toggle-all button text based on checked status
+            function updateToggleAllButtonText() {
+                const toggleButton = document.getElementById('toggle-all');
+                toggleButton.textContent = allChecked ? 'Uncheck All' : 'Check All';
+            }
+        });
+    </script>
+</body>
+</html>
