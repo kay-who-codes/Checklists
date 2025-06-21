@@ -1,216 +1,87 @@
 [
   {
-    "id": "gym",
-    "category": "Gym",
-    "color": "#e63946",
-    "items": [
-      {
-        "id": 1,
-        "text": "Pack gym bag",
-        "checked": false,
-        "position": 1
-      },
-      {
-        "id": 2,
-        "text": "Fill water bottle",
-        "checked": false,
-        "position": 2
-      },
-      {
-        "id": 3,
-        "text": "Bring protein shake",
-        "checked": false,
-        "position": 3
-      },
-      {
-        "id": 4,
-        "text": "Wear proper shoes",
-        "checked": false,
-        "position": 4
-      },
-      {
-        "id": 5,
-        "text": "Bring towel",
-        "checked": false,
-        "position": 5
-      },
-      {
-        "id": 6,
-        "text": "Plan workout routine",
-        "checked": false,
-        "position": 6
-      }
-    ]
-  },
-  {
     "id": "work",
-    "category": "Work",
+    "category": "Going to Work",
     "color": "#2a9d8f",
     "items": [
       {
         "id": 1,
-        "text": "Check emails",
+        "text": "T-Shirt",
         "checked": false,
         "position": 1
       },
       {
         "id": 2,
-        "text": "Team standup meeting",
+        "text": "Charging Cable",
         "checked": false,
         "position": 2
       },
       {
         "id": 3,
-        "text": "Complete project tasks",
+        "text": "ID",
         "checked": false,
         "position": 3
-      },
-      {
-        "id": 4,
-        "text": "Update task board",
-        "checked": false,
-        "position": 4
-      },
-      {
-        "id": 5,
-        "text": "Prepare weekly report",
-        "checked": false,
-        "position": 5
-      },
-      {
-        "id": 6,
-        "text": "Schedule client meeting",
-        "checked": false,
-        "position": 6
       }
     ]
   },
   {
-    "id": "shopping",
-    "category": "Shopping",
+    "id": "nightout",
+    "category": "Going on a Night Out",
     "color": "#9381ff",
     "items": [
       {
         "id": 1,
-        "text": "Fruits and vegetables",
+        "text": "ID",
         "checked": false,
         "position": 1
       },
       {
         "id": 2,
-        "text": "Dairy products",
+        "text": "Phone charging cable",
         "checked": false,
         "position": 2
       },
       {
         "id": 3,
-        "text": "Bread and cereals",
+        "text": "Power bank",
         "checked": false,
         "position": 3
       },
       {
         "id": 4,
-        "text": "Meat and fish",
+        "text": "Cash",
         "checked": false,
         "position": 4
       },
       {
         "id": 5,
-        "text": "Household supplies",
+        "text": "Perfume",
         "checked": false,
         "position": 5
       },
       {
         "id": 6,
-        "text": "Personal care items",
-        "checked": false,
-        "position": 6
-      }
-    ]
-  },
-  {
-    "id": "travel",
-    "category": "Travel",
-    "color": "#f77f00",
-    "items": [
-      {
-        "id": 1,
-        "text": "Pack clothes",
-        "checked": false,
-        "position": 1
-      },
-      {
-        "id": 2,
-        "text": "Pack toiletries",
-        "checked": false,
-        "position": 2
-      },
-      {
-        "id": 3,
-        "text": "Passport and ID",
-        "checked": false,
-        "position": 3
-      },
-      {
-        "id": 4,
-        "text": "Book accommodation",
-        "checked": false,
-        "position": 4
-      },
-      {
-        "id": 5,
-        "text": "Check-in online",
+        "text": "Keys",
         "checked": false,
         "position": 5
-      },
-      {
-        "id": 6,
-        "text": "Exchange currency",
-        "checked": false,
-        "position": 6
       },
       {
         "id": 7,
-        "text": "Download travel apps",
-        "checked": false,
-        "position": 7
-      }
-    ]
-  },
-  {
-    "id": "study",
-    "category": "Study",
-    "color": "#4361ee",
-    "items": [
-      {
-        "id": 1,
-        "text": "Review lecture notes",
-        "checked": false,
-        "position": 1
-      },
-      {
-        "id": 2,
-        "text": "Complete assigned readings",
-        "checked": false,
-        "position": 2
-      },
-      {
-        "id": 3,
-        "text": "Work on assignment",
-        "checked": false,
-        "position": 3
-      },
-      {
-        "id": 4,
-        "text": "Prepare study group materials",
-        "checked": false,
-        "position": 4
-      },
-      {
-        "id": 5,
-        "text": "Practice exam questions",
+        "text": "Reading material",
         "checked": false,
         "position": 5
+      },
+      {
+        "id": 8,
+        "text": "Phone numbers",
+        "checked": false,
+        "position": 5
+      },
+      {
+        "id": 9,
+        "text": "Protection",
+        "checked": false,
+        "position": 6
       }
     ]
   }
